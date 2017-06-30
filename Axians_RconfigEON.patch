@@ -1,0 +1,31 @@
+--- www/lib/crud/downloadFile.php.old	2016-12-02 14:32:26.405938897 +0100
++++ www/lib/crud/downloadFile.php	2016-12-02 14:41:00.003869428 +0100
+@@ -7,7 +7,7 @@
+ $log = ADLog::getInstance();
+ 
+ if (!$session->logged_in) {
+-    echo 'Don\'t bother trying to hack me!!!!!<br /> This hack attempt has been logged';
++    echo 'logged: Don\'t bother trying to hack me!!!!!<br /> This hack attempt has been logged';
+     $log->Warn("Security Issue: Someone tried a Local File Inclusion attempt from IP: " . $_SERVER['REMOTE_ADDR'] . " & Username: " . $session->username . " (File: " . $_SERVER['PHP_SELF'] . ")");
+     // need to add authentication to this script
+     header("Location: " . $config_basedir . "login.php");
+@@ -15,7 +15,9 @@
+     // realpath used to prevent path traversal exploit
+     $fullPath = realpath($_GET['download_file']);
+ 
+-    $pathWhiteList = array('/home/rconfig/backups/', '/home/rconfig/logs/', '/home/rconfig/reports/', '/home/rconfig/data/', '/home/rconfig/backups/syslogs/');
++    $dynaRconfigEONPath = readlink("/srv/eyesofnetwork/rconfig");
++
++    $pathWhiteList = array('/home/rconfig/backups/', '/home/rconfig/logs/', '/home/rconfig/reports/', '/home/rconfig/data/', '/home/rconfig/backups/syslogs/', '/srv/eyesofnetwork/'.$dynaRconfigEONPath.'data/' );
+ 
+ // prevent local file inclusion, by ensuring path confrorms to whitelist
+     $secureAccess = 0; // if this is set 0 by default at the end of the script, then a log entry will be made to report LFI intrusion attempt
+@@ -46,7 +48,7 @@
+         }
+     }
+     if ($secureAccess == 0) {
+-        echo 'Don\'t bother trying to hack me!!!!!<br /> This hack attempt has been logged';
++        echo 'What\'s wrong with you? Don\'t bother trying to hack me!!!!!<br /> This hack attempt has been logged';
+         $log->Warn("Security Issue: Some tried a Local File Inclusion attempt from IP: " . $_SERVER['REMOTE_ADDR'] . " & Username: " . $session->username . " (File: " . $_SERVER['PHP_SELF'] . ")");
+         // need to add authentication to this script
+     }

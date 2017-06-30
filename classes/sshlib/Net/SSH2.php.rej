@@ -1,0 +1,16 @@
+--- /srv/eyesofnetwork/rconfig/classes/sshlib/Net/SSH2.php.orig	2017-05-18 15:14:50.527619564 +0200
++++ /srv/eyesofnetwork/rconfig/classes/sshlib/Net/SSH2.php	2017-05-18 15:15:16.421468883 +0200
+@@ -789,11 +789,11 @@
+         stream_set_blocking($this->fsock, false);
+ 
+         // on windows this returns a "Warning: Invalid CRT parameters detected" error
+-        if (!@stream_select($read, $write, $except, $timeout - $elapsed)) {
++        if (false === stream_select($read, $write, $except, $timeout - $elapsed)) {
+             user_error(rtrim("Cannot connect to $host. Banner timeout"), E_USER_NOTICE);
+             return;
+         }
+-
++        
+         stream_set_blocking($this->fsock, true);
+ 
+         /* According to the SSH2 specs,
