@@ -140,8 +140,10 @@ if (!empty($getNodes)) {
             // check for connection type i.e. telnet SSHv1 SSHv2 & run the command on the device
             if ($device['deviceAccessMethodId'] == '1') { // telnet
                 $showCmd = $conn->showCmdTelnet($command, $prompt, false);
+                $log->Conn("--->Telnet--->".$command."\n\n\n ".implode($showCmd)."\n\n\n");
             } elseif ($device['deviceAccessMethodId'] == '3') { //SSHv2 
                 $showCmd = $conn->connectSSH($command, $prompt);
+                $log->Conn("--->SSH--->".$command."\n\n\n ".implode($showCmd)."\n\n\n");
 
                 // if false returned, log failure
                 if ($showCmd == false) {
@@ -164,9 +166,12 @@ if (!empty($getNodes)) {
 
             // create new array with PHPs EOL parameter
             $filecontents = implode(PHP_EOL, $showCmd);
+            //$log->Conn("\n\n\n ".implode($showCmd)."\n\n\n");
 
             // insert $filecontents to file
             $file->insertFileContents($filecontents, $fullpath);
+               // $log->Conn("Insert in file ".$fullpath);
+
 
             $filename = basename($fullpath); // get filename for DB entry
             $fullpath = dirname($fullpath); // get fullpath for DB entry
